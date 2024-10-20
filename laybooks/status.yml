@@ -1,0 +1,24 @@
+---
+- name: Check host status
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping the host
+      ping:
+
+    - name: Check if host is reachable
+      wait_for_connection:
+        timeout: 5
+
+    - name: Get uptime
+      shell: uptime
+      register: uptime_result
+
+    - name: Set host status
+      set_fact:
+        host_status: "UP"
+        host_uptime: "{{ uptime_result.stdout }}"
+
+    - name: Display status
+      debug:
+        msg: "Host is {{ host_status }} - Uptime: {{ host_uptime }}"
